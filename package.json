@@ -1,0 +1,31 @@
+{
+  "name": "blogger_site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "client-dev": "npm start --prefix client",
+    "dev": "nodemon src/app.js",
+    "start-dev": "concurrently \"npm run dev \" \"npm run client-dev\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.7.11",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.3.1",
+    "nodemailer-mailgun-transport": "^1.4.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0"
+  }
+}
