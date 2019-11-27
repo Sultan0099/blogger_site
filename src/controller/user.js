@@ -25,7 +25,7 @@ const signUp = async (req, res) => {
         password: hashPassword
       });
 
-      const emailToken = Math.floor(Math.random() * 10000) + "_verify";
+      const emailToken = Math.floor(Math.random() * 10000) + "_verify"; // uniqe email token
 
       newUser.emailVerificationToken = emailToken; // assigning unique token
 
@@ -37,7 +37,7 @@ const signUp = async (req, res) => {
        your token is <h3> ${user.emailVerificationToken} </h3>
       `;
 
-      const info = await EmailService.sendText(
+      await EmailService.sendText(
         email,
         "Welcome!",
         "thanks for signup now you are member of blogger_site ",
@@ -59,9 +59,6 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
   const token = assignToken(req.user._id);
 
-  if (!req.user.emailVerification) {
-    return res.json({ msg: "email is not verified" });
-  }
   res.status(200).json({ token });
 };
 
@@ -73,7 +70,7 @@ const verifyEmail = async (req, res) => {
     user.emailVerification = true;
     console.log(req.params._id);
     await user.save();
-    return res.json({ msg: "your email is verified" });
+    return res.status(200).json({ msg: "your email is verified" });
   } else {
     if (user.emailVerification) {
       return res.status(200).json({ msg: "your email is already verified" });

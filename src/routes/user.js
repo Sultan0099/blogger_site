@@ -2,16 +2,20 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
-require("../helpers/passport"); // require strategies
+require("../middleware/passport"); // require passport strategies
 
 const userController = require("../controller/user");
-const { signUpValidator, signInValidator } = require("../helpers/validator");
+const { signUpValidator, signInValidator } = require("../middleware/validator");
+const {
+  checkEmailVerification
+} = require("../middleware/checkEmailVerification");
 
 router.post("/signup", signUpValidator, userController.signUp);
 
 router.post(
   "/signin",
   signInValidator,
+  checkEmailVerification,
   passport.authenticate("local", { session: false }),
   userController.signIn
 );

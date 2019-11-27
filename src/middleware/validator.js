@@ -33,7 +33,7 @@ const signUpValidator = (req, res, next) => {
     res.status(400).json(err);
   } else {
     req.user = { name, email, password };
-    next(null);
+    next();
   }
 };
 
@@ -64,7 +64,7 @@ const signInValidator = (req, res, next) => {
   if (Object.keys(err).length > 0) {
     res.status(400).json(err);
   } else {
-    next(null);
+    next();
   }
 };
 

@@ -1,4 +1,4 @@
 node_modules
 .env
-src/config/*
-client
+src/config/dev.js
+client/node_modules
