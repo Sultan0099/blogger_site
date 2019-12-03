@@ -3,34 +3,58 @@ const bcrypt = require("bcryptjs");
 
 const Schema = mongoose.Schema;
 
-const userSchema = Schema({
-  name: {
+const userSchema = new Schema({
+  method: {
     type: String,
+    enum: ['local', 'google'],
     required: true
   },
-  email: {
-    type: String,
-    required: true
+
+  local: {
+    name: {
+      type: String
+    },
+    email: {
+      type: String
+    },
+    password: {
+      type: String
+    },
+    emailVerified: {
+      type: Boolean
+    },
+    emailVerificationToken: {
+      type: String
+    }
   },
-  password: {
-    type: String,
-    required: true
-  },
-  emailVerification: {
-    type: Boolean,
-    default: false
-  },
-  emailVerificationToken: {
-    type: String
+  google: {
+    googleId: {
+      type: String
+    },
+    name: {
+      type: String
+    },
+    avatar: {
+      type: String
+    },
+    email: {
+      type: String
+    },
+    emailVerificationToken: {
+      type: String
+    },
+    emailVerified: {
+      type: Boolean,
+    }
   }
 });
 
-userSchema.methods.isValidPassword = async function(newPassword) {
+userSchema.methods.isValidPassword = async function (newPassword) {
   try {
-    return bcrypt.compare(newPassword, this.password);
+    return bcrypt.compare(newPassword, this.local.password);
   } catch (err) {
     throw new Error(err);
   }
 };
 
-module.exports = mongoose.model("Users", userSchema);
+module.exports = mongoose.model("users", userSchema);

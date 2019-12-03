@@ -3,15 +3,16 @@ const User = require("../models/user");
 const checkEmailVerification = async (req, res, next) => {
   const { email } = req.body;
 
-  const user = await User.findOne({ email });
+  const localUser = await User.findOne({ "local.email": email });
 
-  if (!user) {
+  if (!localUser) {
     return res.status(400).send({ msg: "user not found" });
   }
 
-  if (!user.emailVerification) {
+  if (!localUser.local.emailVerified) {
     return res.status(401).json({ msg: "email is not verified" });
   }
+
 
   next();
 };

@@ -17,7 +17,7 @@ router.post("/create", checkUserAuth, async (req, res) => {
   res.send(" POST routes");
 });
 
-router.get("/", async (req, res) => {
+router.get("/", checkUserAuth, async (req, res) => {
   const allPost = await Post.find({});
 
   res.send({ post: allPost });

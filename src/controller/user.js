@@ -11,7 +11,7 @@ const signUp = async (req, res) => {
     const { name, email, password } = req.user;
 
     // checking user in database
-    const isUser = await User.findOne({ email });
+    const isUser = await User.findOne({ "local.email": email });
 
     if (!isUser) {
       // hashing the password
@@ -20,30 +20,34 @@ const signUp = async (req, res) => {
 
       // saving user
       const newUser = new User({
-        name,
-        email,
-        password: hashPassword
+        method: "local",
+        local: {
+          name,
+          email,
+          password: hashPassword,
+          emailVerified: false
+        }
       });
 
       const emailToken = Math.floor(Math.random() * 10000) + "_verify"; // uniqe email token
 
-      newUser.emailVerificationToken = emailToken; // assigning unique token
+      newUser.local.emailVerificationToken = emailToken; // assigning unique token
 
-      const user = await newUser.save();
+
 
       const emailTemplate = `<h1> Blogger Site </h1>
-      <p>Welcome ${user.name} </p>
+      <p>Welcome ${newUser.local.name} </p>
       <p> Thank you to sign up to continue please verify you email </p>
-       your token is <h3> ${user.emailVerificationToken} </h3>
+       your token is <h3> ${newUser.local.emailVerificationToken} </h3>
       `;
 
       await EmailService.sendText(
-        email,
+        newUser.local.email,
         "Welcome!",
         "thanks for signup now you are member of blogger_site ",
         emailTemplate
       );
-
+      await newUser.save();
       // const token = assignToken(user._id); // assigning JWT_token
       // res.status(200).json({ token });
       res.status(200).send("Please check your email");
@@ -64,23 +68,43 @@ const signIn = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   const user = await User.findOne({ _id: req.params._id });
-
-  if (user.emailVerificationToken === req.body.token) {
-    user.emailVerificationToken = "";
-    user.emailVerification = true;
-    console.log(req.params._id);
-    await user.save();
-    return res.status(200).json({ msg: "your email is verified" });
-  } else {
-    if (user.emailVerification) {
-      return res.status(200).json({ msg: "your email is already verified" });
+  if (user.method === "local") {
+    if (user.local.emailVerificationToken === req.body.token) {
+      user.local.emailVerificationToken = "";
+      user.local.emailVerified = true;
+      console.log(req.params._id);
+      await user.save();
+      return res.status(200).json({ msg: "your email is verified" });
+    } else {
+      if (user.local.emailVerification) {
+        return res.status(200).json({ msg: "your email is already verified" });
+      }
+      return res.status(400).json({ msg: "put the right Token" });
     }
-    return res.status(400).json({ msg: "put the right Token" });
   }
+  if (user.method === "google") {
+    if (user.google.emailVerificationToken === req.body.token) {
+      user.google.emailVerificationToken = "";
+      user.google.emailVerified = true;
+      console.log(req.params._id);
+      await user.save();
+      return res.status(200).json({ msg: "your email is verified" });
+    } else {
+      if (user.google.emailVerification) {
+        return res.status(200).json({ msg: "your email is already verified" });
+      }
+      return res.status(400).json({ msg: "put the right Token" });
+    }
+  }
+
+};
+
+const googleVerification = async (req, res) => {
+  res.send("token in future");
 };
 
 const secret = async (req, res) => {
   res.send("hello from sercret");
 };
 
-module.exports = { signUp, signIn, verifyEmail, secret };
+module.exports = { signUp, signIn, verifyEmail, secret, googleVerification };
