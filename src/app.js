@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
+const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,7 +14,7 @@ const PORT = process.env.PORT || 3001;
 
 const { mongoUri, cookieSecret } = require("./config/keys");
 
-// Databse
+// Database
 
 mongoose
   .connect(mongoUri, {
@@ -21,10 +22,11 @@ mongoose
     useUnifiedTopology: true,
     useCreateIndex: true
   })
-  .then(() => console.log("Datebase is connected"))
+  .then(() => console.log("Database is connected"))
   .catch(err => console.log({ err }));
 
 // middleware
+app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -42,6 +44,9 @@ app.get("/", (req, res) => {
   res.send(" hello world ");
 });
 
+app.get("/emailVerification", (req, res) => {
+  res.send("email verification");
+});
 // routes
 app.use("/api/user", require("./routes/user"));
 app.use("/api/admin", require("./routes/admin"));

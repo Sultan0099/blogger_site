@@ -30,7 +30,7 @@ const signUpValidator = (req, res, next) => {
   // check err object
 
   if (Object.keys(err).length > 0) {
-    res.status(400).json(err);
+    res.status(400).json({ error: true, errorMsg: err });
   } else {
     req.user = { name, email, password };
     next();

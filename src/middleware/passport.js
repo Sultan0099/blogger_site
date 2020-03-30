@@ -22,7 +22,7 @@ passport.use(
             return done(null, false);
           }
 
-          return done(null, user); // returnig user to passport
+          return done(null, user); // returning user to passport
         }
       } catch (err) {
         done(err);
@@ -31,7 +31,7 @@ passport.use(
   )
 );
 
-// google oauth 20 stratergy
+// google oauth 20 strategy
 
 passport.use(
   new GoogleStrategy(
@@ -49,10 +49,7 @@ passport.use(
         // Checking existing user 
         const isUser = await User.findOne({ "google.googleId": profile.id });
 
-        if (isUser) {
-          console.log("user", user)
-          return done(null, user)
-        }
+
 
         if (!isUser) {
           const newUser = new User({
@@ -65,7 +62,7 @@ passport.use(
               emailVerified: false
             }
           });
-          const emailToken = Math.floor(Math.random() * 10000) + "_verify"; // uniqe email token
+          const emailToken = Math.floor(Math.random() * 10000) + "_verify"; // unique email token
 
           newUser.google.emailVerificationToken = emailToken; // assigning unique token
 
@@ -85,6 +82,8 @@ passport.use(
           );
           const user = await newUser.save();
           return done(null, user);
+        } else {
+          return done(null, isUser)
         }
 
       } catch (err) {

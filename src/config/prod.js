@@ -6,7 +6,8 @@ module.exports = {
     domain: process.env.MAILGUN_DOMAIN
   },
   googleClientId: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET ,
-  urlCallBack = process.env.GOOGLE_URL_CALLBACK , 
-  cookieSecret : process.env.COOKIE_SECRET,
+  clientSecret: process.env.CLIENT_SECRET,
+  urlCallBack: process.env.GOOGLE_URL_CALLBACK,
+  cookieSecret: process.env.COOKIE_SECRET,
+  clientOrigin: ""
 };
