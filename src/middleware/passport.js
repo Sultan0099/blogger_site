@@ -46,14 +46,15 @@ passport.use(
         // console.log("refreshToken", refreshToken);
         // console.log("profile", profile);
 
-        // Checking existing user 
+        // Checking existing user
         const isUser = await User.findOne({ "google.googleId": profile.id });
+        const localUser = await User.findOne({
+          "local.email": profile.emails[0].value
+        });
 
-
-
-        if (!isUser) {
+        if (!isUser && !localUser) {
           const newUser = new User({
-            method: 'google',
+            method: "google",
             google: {
               googleId: profile.id,
               name: profile.displayName,
@@ -65,8 +66,6 @@ passport.use(
           const emailToken = Math.floor(Math.random() * 10000) + "_verify"; // unique email token
 
           newUser.google.emailVerificationToken = emailToken; // assigning unique token
-
-
 
           const emailTemplate = `<h1> Blogger Site </h1>
           <p>Welcome ${newUser.google.name} </p>
@@ -83,13 +82,11 @@ passport.use(
           const user = await newUser.save();
           return done(null, user);
         } else {
-          return done(null, isUser)
+          return done(null, isUser);
         }
-
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-
     }
   )
 );

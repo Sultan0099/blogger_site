@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { connect } from "react-redux";
 
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import GoogleBtn from "../components/GoogleBtn";
 import * as auth from "../api/user.api";
@@ -17,14 +17,14 @@ function Login(props) {
 
   const [user, setUser] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   function handleChange(e) {
     console.log(e.target.value, e.target.name);
     setUser({
       ...user,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
@@ -36,7 +36,6 @@ function Login(props) {
       { email: user.email, password: user.password },
       props
     );
-    console.log(props);
   }
 
   return (
@@ -60,6 +59,12 @@ function Login(props) {
         className={classes.textField}
         onChange={handleChange}
       />
+      {props.user.error
+        ? Object.keys(props.user.errorMsg).map((v) => (
+            <p key={v}> {props.user.errorMsg[v]}</p>
+          ))
+        : ""}
+
       <Button
         type="button"
         onClick={handleSubmit}
@@ -68,7 +73,6 @@ function Login(props) {
       >
         Login{" "}
       </Button>
-
       <Link
         to="/register"
         style={{
@@ -76,7 +80,7 @@ function Login(props) {
           // textDecoration: "none",
           fontSize: "13px",
           float: "right",
-          marginTop: "25px"
+          marginTop: "25px",
         }}
       >
         {" "}
@@ -89,16 +93,16 @@ function Login(props) {
 const useStyles = makeStyles({
   root: {
     marginTop: 10,
-    width: 500
+    width: 500,
   },
   textField: {
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    user: { ...state.user }
+    user: { ...state.user },
   };
 };
 

@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -20,10 +21,10 @@ mongoose
   .connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
   })
   .then(() => console.log("Database is connected"))
-  .catch(err => console.log({ err }));
+  .catch((err) => console.log({ err }));
 
 // middleware
 app.use(cors());
@@ -33,10 +34,10 @@ app.use(bodyParser.json());
 app.use(
   cookieSession({
     maxAge: 24 * 60 * 60 * 1000,
-    keys: [cookieSecret]
+    keys: [cookieSecret],
   })
 );
-
+app.use("/uploads", express.static(path.join(__dirname, "upload")));
 app.use(passport.initialize()); // Used to initialize passport
 app.use(passport.session()); // Used to persist login sessions
 

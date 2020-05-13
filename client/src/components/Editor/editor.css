@@ -1,0 +1,46 @@
+.ql-container.ql-snow {
+  width: 100%;
+  border: none;
+  background-color: rgb(247, 247, 247);
+  margin: 0px auto;
+  overflow: scroll ;
+  max-height: 80vh ;
+ 
+  
+}
+
+.ql-container.ql-snow::-webkit-scrollbar {
+  display: none;
+}
+
+.ql-container p {
+  font-size: 18px;
+
+  font-family: "Roboto", serif;
+}
+
+.ql-container blockquote {
+  font-size: 15px;
+
+  font-family: "Roboto", serif;
+  font-style: italic;
+}
+
+.ql-container h1 {
+  font-size: 30px;
+  font-family: "Montserrat", sans-serif !important ;
+}
+
+.ql-container h2 {
+  font-size: 27px;
+  font-family: "Montserrat", sans-serif !important ;
+}
+
+/* .toolbar {
+  position: fixed;
+  top: 0px;
+  z-index: 4;
+  background-color: white;
+  width: 100%;
+  margin-bottom: 100px;
+} */

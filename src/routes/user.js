@@ -4,14 +4,14 @@ const passport = require("passport");
 
 require("../middleware/passport"); // require passport strategies
 
-const userController = require("../controller/user");  // Controllers 
+const userController = require("../controller/user"); // Controllers
 
 const {
   signUpValidator,
-  signInValidator
+  signInValidator,
 } = require("../middleware/validators");
 const {
-  checkEmailVerification
+  checkEmailVerification,
 } = require("../middleware/checkEmailVerification");
 
 router.post("/signup", signUpValidator, userController.signUp);
@@ -19,7 +19,6 @@ router.post("/signup", signUpValidator, userController.signUp);
 router.post(
   "/signin",
   signInValidator,
-  checkEmailVerification,
   passport.authenticate("local", { session: false }),
   userController.signIn
 );

@@ -5,7 +5,7 @@ const initialState = {
   authenticate: false,
   token: null,
   error: false,
-  errorMsg: null
+  errorMsg: null,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -15,22 +15,24 @@ const userReducer = (state = initialState, action) => {
         ...state,
         user: action.payload,
         authenticate: true,
-        token: action.payload.token,
-        error: false
+        error: false,
+        errorMsg: null,
       };
     case action.USER_SIGNUP:
       return {
         ...state,
         user: action.payload,
         authentication: true,
-        token: action.payload.token,
-        error: false
+        error: false,
       };
     case actions.USER_ERROR:
       return {
         ...state,
-        error: action.payload.error,
-        errorMsg: action.payload.errorMsg
+        user: null,
+        authenticate: false,
+        token: null,
+        error: true,
+        errorMsg: action.payload,
       };
   }
 

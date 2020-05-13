@@ -1,0 +1,11 @@
+.post-container { 
+    width: 80% ;
+    max-height: auto ; 
+    min-height: 300px;
+    margin: 0px auto ; 
+    background-color:yellow ; 
+    display: flex ; 
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+}

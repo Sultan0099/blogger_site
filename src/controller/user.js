@@ -1,10 +1,9 @@
 const bcrypt = require("bcryptjs");
-
 // models
 const User = require("../models/user");
 const EmailService = require("../helpers/nodemailer");
 
-const { assignToken } = require("../helpers/jwt"); // requiring JWT_function
+const { assignToken, verifyToken } = require("../helpers/jwt"); // requiring JWT_function
 
 const signUp = async (req, res) => {
   try {
@@ -25,8 +24,8 @@ const signUp = async (req, res) => {
           name,
           email,
           password: hashPassword,
-          emailVerified: false
-        }
+          emailVerified: false,
+        },
       });
 
       const emailToken = Math.floor(Math.random() * 10000) + "_verify"; // uniqe email token
@@ -49,13 +48,13 @@ const signUp = async (req, res) => {
       const token = assignToken(newUser._id); // assigning JWT_token
 
       res.status(200).json({
+        success: true,
         user: {
           id: newUser._id,
-          name: name,
-          email: email,
-          emailVerified: false
+          name,
+          email,
+          token,
         },
-        token
       });
       // res.status(200).send("signup");
     } else {
@@ -71,7 +70,16 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   const token = assignToken(req.user._id);
-  res.status(200).json({ token });
+  console.log(req.user);
+  res.status(200).json({
+    success: true,
+    user: {
+      id: req.user._id,
+      name: req.user.local.name,
+      email: req.user.local.email,
+      token,
+    },
+  });
 };
 
 const verifyEmail = async (req, res) => {
@@ -116,7 +124,22 @@ const googleVerification = async (req, res) => {
 };
 
 const secret = async (req, res) => {
-  res.send("hello from secret");
+  try {
+    const data = verifyToken(req.body.token);
+    if (!data) res.json({ msg: "token is not valid/expire" });
+    const user = await User.findOne({ _id: data.sub });
+    res.send({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.local.name,
+        email: user.local.email,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
 };
 
 module.exports = { signUp, signIn, verifyEmail, secret, googleVerification };
