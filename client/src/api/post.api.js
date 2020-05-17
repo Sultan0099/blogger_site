@@ -3,7 +3,7 @@ import axios from "axios";
 import * as actions from "../actions/post";
 
 
-const createPost = (postData) => {
+const createPost = (postData, props) => {
     return async (dispatch, getState) => {
         try {
             console.log(postData)

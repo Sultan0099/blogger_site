@@ -3,6 +3,7 @@ import * as actions from "../actions/post";
 const initialState = {
   posts: [],
   postsCount: 0,
+  error: null
 };
 
 const postReducer = (state = initialState, action) => {

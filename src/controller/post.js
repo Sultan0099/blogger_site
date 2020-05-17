@@ -1,4 +1,5 @@
 const Post = require("../models/post");
+const User = require("../models/user");
 const upload = require("../config/multer");
 
 const uploadFiles = (req, res) => {
@@ -50,4 +51,29 @@ const getPosts = async (req, res) => {
   }
 }
 
-module.exports = { uploadFiles, createPost, getPosts };
+const singlePost = async (req, res) => {
+  try {
+    let post = {};
+    const { postId } = req.body;
+    console.log(postId)
+    const fetchedPost = await Post.findOne({ _id: req.body.postId });
+    if (!post) {
+      return res.status(200).json({ success: true, data: "post not found" })
+    }
+
+    const fetchedWriter = await User.findOne({ _id: fetchedPost._doc.writer });
+
+    const { _doc: { local: { name, email }, _id } } = fetchedWriter
+
+    post = { ...fetchedPost._doc, writer: { name, email, _id } }
+
+
+    res.status(200).json({ success: true, data: post })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ success: false, error })
+  }
+}
+
+
+module.exports = { uploadFiles, createPost, getPosts, singlePost };

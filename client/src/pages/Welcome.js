@@ -24,9 +24,9 @@ function Welcome(props) {
       <Navbar {...props}></Navbar>
       <div className="post-container">
         {
-          posts && posts.posts.map((p) => (
+          posts.posts.length > 0 ? posts.posts.map((p) => (
             <Post key={p._id} id={p._id} title={p.title} body={p.body} createdAt={p.createdAt} />
-          ))
+          )) : <p>There is not any post found </p>
         }
 
       </div>

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
+import hljs from 'highlight.js/lib/core';
+import 'highlight.js/styles/github.css';
 
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./editor.css";
-
 import axios from "axios";
 
-import Button from "@material-ui/core/Button";
 
 import CustomToolbar from "./CustomToolbar";
 import "./ImageBlot";
@@ -30,23 +30,60 @@ Quill.register(FontAttributor, true);
 
 const QuillClipboard = Quill.import("modules/clipboard");
 
-class Clipboard extends QuillClipboard {
-  // getMetaTagElements = (stringValue) => {
-  //   const el = document.createElement("div");
-  //   el.innerHTML = stringValue;
-  //   console.log(el);
-  //   return el.getElementsByTagName("meta");
-  // };
+// class Clipboard extends QuillClipboard {
+//   getMetaTagElements = (stringValue) => {
+//     const el = document.createElement("div");
+//     el.innerHTML = stringValue;
+//     console.log(el);
+//     return el.getElementsByTagName("meta");
+//   };
 
-  async onPaste(e) {
-    let clipboardData = e.clipboardData;
-    let pasteData = await clipboardData.getData("Text");
+//   async onPaste(e) {
+//     let clipboardData = e.clipboardData;
+//     let pastedData = await clipboardData.getData("Text");
 
-    console.log(pasteData);
-  }
-}
+//     const urlMatches = pastedData.match(/\b(http|https)?:\/\/\S+/gi) || [];
+//     if (urlMatches.length > 0) {
+//       e.preventDefault();
+//       urlMatches.forEach(link => {
+//         axios.get(link)
+//           .then(payload => {
+//             // let title, image, url, description;
+//             let title, image, url;
+//             for (let node of this.getMetaTagElements(payload)) {
+//               if (node.getAttribute("property") === "og:title") {
+//                 title = node.getAttribute("content");
+//               }
+//               if (node.getAttribute("property") === "og:image") {
+//                 image = node.getAttribute("content");
+//               }
+//               if (node.getAttribute("property") === "og:url") {
+//                 url = node.getAttribute("content");
+//               }
+//               // if (node.getAttribute("property") === "og:description") {
+//               //     description = node.getAttribute("content");
+//               // }
+//             }
 
-Quill.register("modules/clipboard", Clipboard, true);
+//             const rendered = `<a href=${url} target="_blank"><div><img src=${image} alt=${title} width="20%"/><span>${title}</span></div></a>`;
+
+//             let range = this.quill.getSelection();
+//             let position = range ? range.index : 0;
+//             this.quill.pasteHTML(position, rendered, 'silent');
+//             this.quill.setSelection(position + rendered.length);
+//           })
+//           .catch(error => console.error(error));
+//       });
+
+//     } else {
+//       super.onPaste(e);
+//     }
+//   }
+
+
+// }
+
+// Quill.register("modules/clipboard", Clipboard, true);
 
 /*
   Clipboard end  
@@ -258,6 +295,7 @@ class QuillEditor extends React.Component {
     );
   }
   modules = {
+    // syntax: true,
     toolbar: {
       container: "#toolbar",
       handlers: {
