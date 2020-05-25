@@ -7,7 +7,6 @@ const assignToken = (payload) => {
       iss: "blogger_site",
       sub: payload,
       iat: new Date().getTime(),
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
     },
     jwtSecret
   );

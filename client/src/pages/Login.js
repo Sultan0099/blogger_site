@@ -16,8 +16,8 @@ function Login(props) {
   const classes = useStyles();
 
   const [user, setUser] = useState({
-    email: "",
-    password: "",
+    email: "user@example.com",
+    password: "1234567",
   });
 
   function handleChange(e) {
@@ -47,6 +47,7 @@ function Login(props) {
         name="email"
         type="text"
         fullWidth
+        value={user.email}
         className={classes.textField}
         onChange={handleChange}
       />
@@ -56,15 +57,16 @@ function Login(props) {
         name="password"
         type="password"
         fullWidth
+        value={user.password}
         className={classes.textField}
         onChange={handleChange}
       />
       {props.user.error
         ? Object.keys(props.user.errorMsg).map((v) => (
-            <p key={v}> {props.user.errorMsg[v]}</p>
-          ))
+          <p key={v}> {props.user.errorMsg[v]}</p>
+        ))
         : ""}
-
+      <p> Don't put you personal information like email , name in any case . Thank you ! </p>
       <Button
         type="button"
         onClick={handleSubmit}

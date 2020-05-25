@@ -5,11 +5,82 @@ const EmailService = require("../helpers/nodemailer");
 
 const { assignToken, verifyToken } = require("../helpers/jwt"); // requiring JWT_function
 
+/*
+----- The Signup method down below has email verification functionality -----
+*/
+
+// const signUp = async (req, res) => {
+//   try {
+//     const { name, email, password } = req.user;
+
+//     // checking user in database
+//     const isUser = await User.findOne({ "local.email": email });
+
+//     if (!isUser) {
+//       // hashing the password
+//       const salt = await bcrypt.genSalt(10);
+//       const hashPassword = await bcrypt.hash(password, salt);
+
+//       // saving user
+//       const newUser = new User({
+//         method: "local",
+//         local: {
+//           name,
+//           email,
+//           password: hashPassword,
+//           emailVerified: false,
+//         },
+//       });
+
+//       const emailToken = Math.floor(Math.random() * 10000) + "_verify"; // uniqe email token
+
+//       newUser.local.emailVerificationToken = emailToken; // assigning unique token
+
+//       const emailTemplate = `<h1> Blogger Site </h1>
+//       <p>Welcome ${newUser.local.name} </p>
+//       <p> Thank you to sign up to continue please verify you email </p>
+//        your token is <h3> ${newUser.local.emailVerificationToken} </h3>
+//       `;
+
+//       await EmailService.sendText(
+//         newUser.local.email,
+//         "Welcome!",
+//         "thanks for signup now you are member of blogger_site ",
+//         emailTemplate
+//       );
+//       await newUser.save();
+//       const token = assignToken(newUser._id); // assigning JWT_token
+
+//       res.status(200).json({
+//         success: true,
+//         user: {
+//           id: newUser._id,
+//           name,
+//           email,
+//           token,
+//         },
+//       });
+//       // res.status(200).send("signup");
+//     } else {
+//       res
+//         .status(400)
+//         .json({ error: true, errorMsg: { msg: "email is already in used" } });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).send({ error: true, errorMsg: err });
+//   }
+// };
+
+
+
 const signUp = async (req, res) => {
   try {
+
     const { name, email, password } = req.user;
 
-    // checking user in database
+
+    // Check if there is user in database 
     const isUser = await User.findOne({ "local.email": email });
 
     if (!isUser) {
@@ -28,22 +99,6 @@ const signUp = async (req, res) => {
         },
       });
 
-      const emailToken = Math.floor(Math.random() * 10000) + "_verify"; // uniqe email token
-
-      newUser.local.emailVerificationToken = emailToken; // assigning unique token
-
-      const emailTemplate = `<h1> Blogger Site </h1>
-      <p>Welcome ${newUser.local.name} </p>
-      <p> Thank you to sign up to continue please verify you email </p>
-       your token is <h3> ${newUser.local.emailVerificationToken} </h3>
-      `;
-
-      await EmailService.sendText(
-        newUser.local.email,
-        "Welcome!",
-        "thanks for signup now you are member of blogger_site ",
-        emailTemplate
-      );
       await newUser.save();
       const token = assignToken(newUser._id); // assigning JWT_token
 
@@ -56,17 +111,13 @@ const signUp = async (req, res) => {
           token,
         },
       });
-      // res.status(200).send("signup");
-    } else {
-      res
-        .status(400)
-        .json({ error: true, errorMsg: { msg: "email is already in used" } });
     }
-  } catch (err) {
-    console.log(err);
-    res.status(500).send({ error: true, errorMsg: err });
+  } catch (error) {
+    res.status(500).json({ success: false, error });
   }
-};
+
+}
+
 
 const signIn = async (req, res) => {
   const token = assignToken(req.user._id);

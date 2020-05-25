@@ -28,6 +28,7 @@ mongoose
 
 // middleware
 app.use(cors());
+app.use(express.static(path.join(__dirname, "..", 'client', 'build')));
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -41,17 +42,19 @@ app.use("/uploads", express.static(path.join(__dirname, "upload")));
 app.use(passport.initialize()); // Used to initialize passport
 app.use(passport.session()); // Used to persist login sessions
 
-app.get("/", (req, res) => {
-  res.send(" hello world ");
-});
-
-app.get("/emailVerification", (req, res) => {
-  res.send("email verification");
-});
 // routes
 app.use("/api/user", require("./routes/user"));
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/post", require("./routes/post"));
+
+
+app.get("/*", (req, res) => {
+
+  console.log(path.join(__dirname, 'client', 'build', 'index.html'))
+  res.sendFile(path.join(__dirname, "..", 'client', 'build', 'index.html'));
+});
+
+
 
 app.listen(PORT, () => {
   console.log(`server is running at port ${PORT}`);

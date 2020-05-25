@@ -34,7 +34,7 @@ function Login(props) {
     console.log(user.email, user.password);
 
     await props.userSignUp(user);
-    console.log(props);
+    props.history.push("/login")
   }
 
   return (

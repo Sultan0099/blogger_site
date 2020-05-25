@@ -1,6 +1,8 @@
 const Post = require("../models/post");
 const User = require("../models/user");
 const upload = require("../config/multer");
+const JWT = require("jsonwebtoken");
+const secret = require("../config/keys").jwtSecret;
 
 const uploadFiles = (req, res) => {
   upload(req, res, (err) => {
@@ -43,7 +45,10 @@ const createPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find({});
+    const token = req.token;
+    const payload = await JWT.verify(token, secret);
+    console.log(payload)
+    const posts = await Post.find({ writer: payload.sub });
     console.log(posts)
     res.status(200).json({ success: true, data: posts })
   } catch (err) {

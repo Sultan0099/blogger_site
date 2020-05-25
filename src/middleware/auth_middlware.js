@@ -9,6 +9,7 @@ const checkUserAuth = async (req, res, next) => {
       const token = req.headers.authorization.split(" ")[1];
       const payload = await JWT.verify(token, secret);
       if (payload) {
+        req.token = token;
         next();
       } else {
         res.status(401).send("unauthorized");
